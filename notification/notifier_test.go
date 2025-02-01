@@ -2,6 +2,8 @@ package notification
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 type MockNotifier struct {
@@ -13,26 +15,25 @@ func (m *MockNotifier) Notify(userID, message string) error {
 	return nil
 }
 
-func TestEmailNotifier_Notify(t *testing.T) {
-	notifier := &EmailNotifier{}
-	userID := "user123"
-	message := "test message"
+func TestNotifier(t *testing.T) {
+	t.Run("Test EmailNotifier", func(t *testing.T) {
+		notifier := &EmailNotifier{}
+		userID := "user123"
+		message := "test message"
 
-	notifier.Notify(userID, message)
-}
+		err := notifier.Notify(userID, message)
+		assert.NoError(t, err, "Notify should not return an error")
+	})
 
-func TestMockNotifier_Notify(t *testing.T) {
-	mockNotifier := &MockNotifier{}
-	userID := "user123"
-	message := "test message"
+	t.Run("Test MockNotifier", func(t *testing.T) {
+		mockNotifier := &MockNotifier{}
+		userID := "user123"
+		message := "test message"
 
-	mockNotifier.Notify(userID, message)
+		err := mockNotifier.Notify(userID, message)
+		assert.NoError(t, err, "Notify should not return an error")
 
-	if len(mockNotifier.SentMessages) != 1 {
-		t.Errorf("expected 1 message to be sent, got %d", len(mockNotifier.SentMessages))
-	}
-
-	if mockNotifier.SentMessages[0] != message {
-		t.Errorf("expected message %q, got %q", message, mockNotifier.SentMessages[0])
-	}
+		assert.Equal(t, 1, len(mockNotifier.SentMessages), "expected 1 message to be sent")
+		assert.Equal(t, message, mockNotifier.SentMessages[0], "expected message to match")
+	})
 }
