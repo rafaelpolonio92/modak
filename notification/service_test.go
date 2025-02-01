@@ -53,12 +53,10 @@ func TestService_Send_TimeWindow(t *testing.T) {
 	mockNotifier := &MockNotifier{}
 	service := NewService(mockNotifier, rules)
 
-	// Set a fixed clock for testing
 	fixedTime := time.Now()
 	mockClock := &MockClock{now: fixedTime}
 	service.SetClock(mockClock)
 
-	// Send two notifications within the time window
 	err := service.Send("status", "user1", "status update 1")
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
@@ -69,13 +67,11 @@ func TestService_Send_TimeWindow(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 	}
 
-	// Exceed the rate limit
 	err = service.Send("status", "user1", "status update 3")
 	if err != ErrRateLimitExceeded {
 		t.Errorf("expected ErrRateLimitExceeded, got %v", err)
 	}
 
-	// Advance time beyond the window and try again
 	mockClock.now = fixedTime.Add(time.Minute + time.Second)
 	err = service.Send("status", "user1", "status update 3")
 	if err != nil {
@@ -83,7 +79,6 @@ func TestService_Send_TimeWindow(t *testing.T) {
 	}
 }
 
-// MockClock is a mock implementation of the Clock interface for testing.
 type MockClock struct {
 	now time.Time
 }

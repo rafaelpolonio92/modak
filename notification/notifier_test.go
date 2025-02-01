@@ -4,7 +4,6 @@ import (
 	"testing"
 )
 
-// MockNotifier is a mock implementation of the Notifier interface for testing.
 type MockNotifier struct {
 	SentMessages []string
 }
@@ -19,11 +18,7 @@ func TestEmailNotifier_Notify(t *testing.T) {
 	userID := "user123"
 	message := "test message"
 
-	// Simply call Notify and ensure it doesn't panic
 	notifier.Notify(userID, message)
-
-	// Since EmailNotifier just prints to the console, we can't easily verify the output.
-	// This test is mostly to ensure the method doesn't panic.
 }
 
 func TestMockNotifier_Notify(t *testing.T) {
